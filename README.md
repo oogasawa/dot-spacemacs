@@ -35,4 +35,5 @@ mv dot-spacemacs/.spacemacs ~/.spacemacs
 - https://github.com/syl20bnr/spacemacs
 - https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
     - ""How I set up my emacs for TypeScript + React" (2020)
+- https://nasum.dev/2020/02/08/spacemacs-input-japanies/
 
