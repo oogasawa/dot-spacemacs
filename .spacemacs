@@ -68,6 +68,7 @@ This function should only modify configuration layer settings."
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     sql
      (typescript :variables
                  typescript-backend 'tide
                  typescript-linter 'tslint
@@ -86,6 +87,7 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
+                                      mozc
                                       rjsx-mode
                                       prettier-js
                                       yasnippet-snippets
@@ -118,7 +120,7 @@ It should only modify the values of Spacemacs settings."
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper nil
+   dotspacemacs-enable-emacs-pdumper t
 
    ;; Name of executable file pointing to emacs 27+. This executable must be
    ;; in your PATH.
@@ -616,7 +618,39 @@ before packages are loaded."
 (global-company-mode)
 
 
+;;;------------------------------------------------------------------
+;;; https://nasum.dev/2020/02/08/spacemacs-input-japanies/
 
+
+;; Mozc settings
+(set-language-environment "Japanese")
+(setq default-input-method "japanese-mozc")
+(setq mozc-candidate-style 'echo-area)
+
+(defun mozc-start()
+  (interactive)
+  (set-cursor-color "blue")
+  (message "Mozc start")
+  (mozc-mode 1))
+
+(defun mozc-end()
+  (interactive)
+  (setm-cursor-color "gray")
+  (message "Mozc end")
+  (mozc-mode -1))
+
+(bind-key* "<henkan>"  'mozc-start)
+
+(bind-keys :map mozc-mode-map
+           ("<muhenkan>" . mozc-end)
+           ("C-g" . mozc-end)
+           ("C-x h" . mark-whole-buffer)
+           ("C-x C-s" . save-buffer))
+
+
+;;;------------------------------------------------------------------
+
+(bind-key* "<f9>" 'holy-mode)
   )
 
 
