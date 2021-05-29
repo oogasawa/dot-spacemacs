@@ -568,6 +568,9 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+(setq lsp-java-server-install-dir "/home/oogasawa/.emacs.d/lsp-java-servery")
+
+
 ;;;------------------------------------------------------------------
 ;;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
 
@@ -577,17 +580,18 @@ before packages are loaded."
     (eldoc-mode)
     (tide-hl-identifier-mode +1)
     (setq web-mode-enable-auto-quoting nil)
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-attr-indent-offset 2)
-    (setq web-mode-attr-value-indent-offset 2)
+    ;; (setq web-mode-markup-indent-offset 4)
+    ;; (setq web-mode-code-indent-offset 4)
+    ;; (setq web-mode-attr-indent-offset 4)
+    ;; (setq web-mode-attr-value-indent-offset 4)
     (setq lsp-eslint-server-command '("node" (concat (getenv "HOME") "/var/src/vscode-eslint/server/out/eslintServer.js") "--stdio"))
     (set (make-local-variable 'company-backends)
          '((company-tide company-files :with company-yasnippet)
            (company-dabbrev-code company-dabbrev))))
 
+
 ;; hooks
-(add-hook 'before-save-hook 'tide-format-before-save)
+;;(add-hook 'before-save-hook 'tide-format-before-save)
 
 
 ;; use rjsx-mode for .js* files except json and use tide with rjsx
@@ -614,10 +618,10 @@ before packages are loaded."
 (global-flycheck-mode)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-;; company-mode 
+;; company-mode
 (global-company-mode)
 
-
+(setq-default typescript-indent-level 4)
 ;;;------------------------------------------------------------------
 ;;; https://nasum.dev/2020/02/08/spacemacs-input-japanies/
 
@@ -651,6 +655,8 @@ before packages are loaded."
 ;;;------------------------------------------------------------------
 
 (bind-key* "<f9>" 'holy-mode)
+(bind-key* "C-j" 'holy-mode)
+
   )
 
 
