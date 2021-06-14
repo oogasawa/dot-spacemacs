@@ -86,12 +86,11 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(
-                                      mozc
-                                      rjsx-mode
-                                      prettier-js
-                                      yasnippet-snippets
-                                      )
+   dotspacemacs-additional-packages
+   '(
+        mozc rjsx-mode prettier-js
+             yasnippet-snippets
+             zenburn-theme )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -249,7 +248,9 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-light
+                         zenburn
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -568,10 +569,27 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+;;;------------------------------------------------------------------
+;;; Java
+
+(setq lsp-java-configuration-runtimes '[
+					                              (:name "JavaSE-15"
+						                                   :path "/usr/lib/jvm/java-15-openjdk-amd64/"
+						                                     :default t)])
+
 (setq lsp-java-server-install-dir "/home/oogasawa/.emacs.d/lsp-java-servery")
+(require 'lsp-java-boot)
+
+;; to enable the lenses
+(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
+
+
 
 
 ;;;------------------------------------------------------------------
+;;; Node.js / TypeScript
 ;;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
 
 ;; tide def func:
