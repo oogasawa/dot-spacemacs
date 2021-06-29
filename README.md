@@ -1,6 +1,9 @@
 # dot-spacemacs
 
 
+<font style="color: green">Current version is for 0.2x of spacemacs.</font>
+
+
 User configulation file `.spacemace` of Spacemacs, where
 
 - The editing style is set to `emacs`.
