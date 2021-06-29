@@ -26,7 +26,11 @@ Then replace the user setting file (`.spacemacs`) to this one.
 ```
 mv .spacemacs .spacemacs.bak
 git clone https://github.com/oogasawa/dot-spacemacs
-mv dot-spacemacs/.spacemacs ~/.spacemacs
+
+export SPACEMACSDIR=$HOME/dot-spacemacs
+
+# Or ...
+# mv dot-spacemacs/.spacemacs ~/.spacemacs
 ```
 
 
