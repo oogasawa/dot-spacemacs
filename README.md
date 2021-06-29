@@ -30,7 +30,7 @@ git clone https://github.com/oogasawa/dot-spacemacs
 export SPACEMACSDIR=$HOME/dot-spacemacs
 
 # Or ...
-# mv dot-spacemacs/.spacemacs ~/.spacemacs
+# mv dot-spacemacs/init.el ~/.spacemacs
 ```
 
 
