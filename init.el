@@ -6,6 +6,9 @@
   "Layer configuration:
 This function should only modify configuration layer settings."
   (setq-default
+
+   ;;dotspacemacs-line-numbers t
+
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
@@ -32,7 +35,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(perl5
+     yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -51,15 +55,16 @@ This function should only modify configuration layer settings."
      (java :variables java-backend 'lsp)
      (javascript :variables
                  javascript-backend 'tide
-                 javascript-fmt-tool 'prettier
+                 javascript-fmt-tool 'web-beautify
                  node-add-modules-path t)
+     (json :variables json-fmt-tool 'web-beautify)
      lsp
      markdown
      ;;multiple-cursors
      neotree
      org
      (python :variables python-backend 'anaconda)
-    (rust :variable
+     (rust :variable
            lsp-rust-server 'rust-analyzer)
      search-engine
      ;; (shell :variables
@@ -72,8 +77,12 @@ This function should only modify configuration layer settings."
      (typescript :variables
                  typescript-backend 'tide
                  typescript-linter 'eslint
-                 typescript-fmt-tool 'prettier
-                 tide-tsserver-executable "~/.nvm/versions/node/v14.15.1/bin/tsserver"
+
+                 ;; typescript-fmt-tool 'prettier
+		 typescript-fmt-tool 'web-beautify
+                 ;; tide-tsserver-executable "~/.nvm/versions/node/v16.3.0/bin/tsserver"
+                 tide-tsserver-executable "/usr/local/graalvm-ce-java17-21.3.0/languages/nodejs/bin/tsserver"
+                 ;; tide-tsserver-executable "/usr/local/graalvm-ce-java11-21.2.0/languages/nodejs/bin/tsserver"
                  node-add-modules-path t)
      )
 
@@ -82,15 +91,15 @@ This function should only modify configuration layer settings."
    ;; in a layer (generally the packages are installed only and should still be
    ;; loaded using load/require/use-package in the user-config section below in
    ;; this file). If you need some configuration for these packages, then
-  ;; consider creating a layer. You can also put the configuration in
+   ;; consider creating a layer. You can also put the configuration in
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(
-        mozc rjsx-mode prettier-js
-             yasnippet-snippets
-             zenburn-theme )
+   '(     mozc rjsx-mode prettier-js
+               windresize
+               yasnippet-snippets
+               zenburn-theme )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -186,8 +195,8 @@ It should only modify the values of Spacemacs settings."
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
-  ;; (default 'vim)
-  dotspacemacs-editing-style 'emacs
+   ;; (default 'vim)
+   dotspacemacs-editing-style 'emacs
 
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
@@ -274,7 +283,7 @@ It should only modify the values of Spacemacs settings."
                                :width normal)
 
    ;; The leader key (default "SPC")
-dotspacemacs-leader-key "SPC"
+   dotspacemacs-leader-key "SPC"
 
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
    ;; (default "SPC")
@@ -531,7 +540,7 @@ dotspacemacs-leader-key "SPC"
    ;; (default nil)
    dotspacemacs-pretty-docs nil
 
-  ;; If nil the home buffer shows the full path of agenda items
+   ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
    dotspacemacs-home-shorten-agenda-source nil
 
@@ -572,17 +581,29 @@ before packages are loaded."
 ;;;------------------------------------------------------------------
 ;;; Java
 
-(setq lsp-java-configuration-runtimes '[
-					                              (:name "JavaSE-16"
-						                                   :path "/usr/lib/jvm/java-16-openjdk-amd64/"
-						                                     :default t)])
 
-(setq lsp-java-server-install-dir "/home/oogasawa/.emacs.d/lsp-java-servery")
-(require 'lsp-java-boot)
+  (setq lsp-java-configuration-runtimes '[
+					  ;; (:name "JavaSE-15"
+					  ;; 	 :path "/usr/lib/jvm/java-15-openjdk-amd64/"
+					  ;; 	 :default t)])
+					  ;; (:name "GraalVM-11"
+					  ;;  :path "/usr/local/graalvm-ce-java11-21.2.0/"
+					  ;;  :default t)
+					  (:name "GraalVM-17"
+						 :path "/home/oogasawa/local/graalvm-ce-java17-21.3.0/"
+						 :default t)
+            ])
 
-;; to enable the lenses
-(add-hook 'lsp-mode-hook #'lsp-lens-mode)
-(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
+  (setq lsp-java-server-install-dir "/home/oogasawa/.emacs.d/lsp-java-servery")
+  ;; lombok support
+  ;; https://github.com/emacs-lsp/lsp-java/issues/26
+  ;; (setq lsp-java-vmargs '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/oogasawa/.m2/repository/org/projectlombok/lombok/1.18.4/lombok-1.18.4.jar" "-Xbootclasspath/a:/home/oogasawa/.m2/repository/org/projectlombok/lombok/1.18.4/lombok-1.18.4.jar"))
+  (require 'lsp-java-boot)
+
+  ;; to enable the lenses
+  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
 
 
 
@@ -592,8 +613,8 @@ before packages are loaded."
 ;;; Node.js / TypeScript
 ;;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
 
-;; tide def func:
- (defun tide-setup-hook ()
+  ;; tide def func:
+  (defun tide-setup-hook ()
     (tide-setup)
     (eldoc-mode)
     (tide-hl-identifier-mode +1)
@@ -608,76 +629,85 @@ before packages are loaded."
            (company-dabbrev-code company-dabbrev))))
 
 
-;; hooks
-;;(add-hook 'before-save-hook 'tide-format-before-save)
+  ;; hooks
+  ;;(add-hook 'before-save-hook 'tide-format-before-save)
 
 
-;; use rjsx-mode for .js* files except json and use tide with rjsx
-(add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-(add-hook 'rjsx-mode-hook 'tide-setup-hook)
+  ;; use rjsx-mode for .js* files except json and use tide with rjsx
+  (add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))
+  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+  (add-hook 'rjsx-mode-hook 'tide-setup-hook)
 
 
-;; web-mode extra config
-;; (add-hook 'web-mode-hook 'tide-setup-hook
-;;           (lambda () (pcase (file-name-extension buffer-file-name)
-;;                   ("tsx" ('tide-setup-hook))
-;;                   (_ (my-web-mode-hook)))))
-;; (flycheck-add-mode 'typescript-tslint 'web-mode)
-;; (add-hook 'web-mode-hook 'company-mode)
-;; (add-hook 'web-mode-hook 'prettier-js-mode)
-;; (add-hook 'web-mode-hook #'turn-on-smartparens-mode t)
- ;; ...
+  ;; web-mode extra config
+  ;; (add-hook 'web-mode-hook 'tide-setup-hook
+  ;;           (lambda () (pcase (file-name-extension buffer-file-name)
+  ;;                   ("tsx" ('tide-setup-hook))
+  ;;                   (_ (my-web-mode-hook)))))
+  ;; (flycheck-add-mode 'typescript-tslint 'web-mode)
+  ;; (add-hook 'web-mode-hook 'company-mode)
+  ;; (add-hook 'web-mode-hook 'prettier-js-mode)
+  ;; (add-hook 'web-mode-hook #'turn-on-smartparens-mode t)
+  ;; ...
 
-;; yasnippet
-(yas-global-mode 1)
+  ;; yasnippet
+  (yas-global-mode 1)
 
-;; flycheck
-(global-flycheck-mode)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; flycheck
+  (global-flycheck-mode)
+  (add-hook 'after-init-hook #'global-flycheck-mode)
 
-;; company-mode
-(global-company-mode)
+  ;; company-mode
+  (global-company-mode)
 
-(setq-default typescript-indent-level 4)
+  (setq-default typescript-indent-level 4)
 ;;;------------------------------------------------------------------
 ;;; https://nasum.dev/2020/02/08/spacemacs-input-japanies/
 
 
-;; Mozc settings
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-(setq mozc-candidate-style 'echo-area)
+  ;; Mozc settings
+  (set-language-environment "Japanese")
+  (setq default-input-method "japanese-mozc")
+  (setq mozc-candidate-style 'echo-area)
 
-(defun mozc-start()
-  (interactive)
-  (set-cursor-color "blue")
-  (message "Mozc start")
-  (mozc-mode 1))
+  ;; (defun mozc-start()
+  ;;   (interactive)
+  ;;   (set-cursor-color "blue")
+  ;;   (message "Mozc start")
+  ;;   (mozc-mode 1))
 
-(defun mozc-end()
-  (interactive)
-  (setm-cursor-color "gray")
-  (message "Mozc end")
-  (mozc-mode -1))
+  ;; (defun mozc-end()
+  ;;   (interactive)
+  ;;   (setm-cursor-color "gray")
+  ;;   (message "Mozc end")
+  ;;   (mozc-mode -1))
 
-(bind-key* "<henkan>"  'mozc-start)
+  ;; (bind-key* "<henkan>"  'mozc-start)
 
-(bind-keys :map mozc-mode-map
-           ("<muhenkan>" . mozc-end)
-           ("C-g" . mozc-end)
-           ("C-x h" . mark-whole-buffer)
-           ("C-x C-s" . save-buffer))
+  ;; (bind-keys :map mozc-mode-map
+  ;;            ("<muhenkan>" . mozc-end)
+  ;;            ("C-g" . mozc-end)
+  ;;            ("C-x h" . mark-whole-buffer)
+  ;;            ("C-x C-s" . save-buffer))
 
 
 ;; ------------------------------------------------------------------
 
-(bind-key* "<f9>" 'holy-mode)
-(bind-key* "C-j" 'holy-mode)
-
-  )
+  (bind-key* "<f2>" 'holy-mode)
+  (bind-key* "C-j" 'holy-mode)
 
 
+
+  (defun myprevious-window ()
+    (interactive)
+    (other-window -1))
+
+  (bind-key* "C-x p" 'myprevious-window)
+
+
+
+
+)
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (defun dotspacemacs/emacs-custom-settings ()
@@ -685,33 +715,20 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(package-selected-packages
-   (quote
-    (vmd-mode valign mmm-mode markdown-toc markdown-mode gh-md emoji-cheat-sheet-plus company-emoji mvn meghanada company yasnippet maven-test-mode groovy-mode groovy-imports pcache ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection string-edit spaceline-all-the-icons restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (yasnippet-snippets yapfify ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toml-mode toc-org tide typescript-mode flycheck tagedit sql-indent spaceline powerline smeargle slim-mode scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racer pos-tip rust-mode pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pip-requirements persp-mode pcre2el paradox spinner orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-plus-contrib org-mime org-download org-bullets open-junk-file neotree mozc move-text mmm-mode markdown-toc magit-gitflow magit-popup magit magit-section macrostep lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc indent-guide hydra lv hy-mode dash-functional hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-gtags helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haml-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit with-editor transient dash gh-md ggtags fuzzy flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu ess-smart-equals ess-R-data-view popup ctable ess engine-mode emmet-mode elisp-slime-nav dumb-jump disaster define-word cython-mode company-web web-completion-data company-statistics company-emacs-eclim eclim company-c-headers company-anaconda company column-enforce-mode coffee-mode cmake-mode clean-aindent-mode clang-format cargo bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic f s aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line avy helm-core async ac-ispell auto-complete zenburn-theme tabbar solarized-theme session pod-mode muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor apache-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(evil-want-Y-yank-to-eol nil)
+   '(package-selected-packages
+     (quote
+      (vmd-mode valign mmm-mode markdown-toc markdown-mode gh-md emoji-cheat-sheet-plus company-emoji mvn meghanada company yasnippet maven-test-mode groovy-mode groovy-imports pcache ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection string-edit spaceline-all-the-icons restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
+>>>>>>> 27ccba51de364a048d06bdfd5ac9c478b7673624
