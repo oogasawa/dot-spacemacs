@@ -71,7 +71,7 @@ This function should only modify configuration layer settings."
      sql
      (typescript :variables
                  typescript-backend 'tide
-                 typescript-linter 'tslint
+                 typescript-linter 'eslint
                  typescript-fmt-tool 'prettier
                  tide-tsserver-executable "~/.nvm/versions/node/v14.15.1/bin/tsserver"
                  node-add-modules-path t)
@@ -119,7 +119,7 @@ It should only modify the values of Spacemacs settings."
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper t
+   dotspacemacs-enable-emacs-pdumper nil
 
    ;; Name of executable file pointing to emacs 27+. This executable must be
    ;; in your PATH.
@@ -573,8 +573,8 @@ before packages are loaded."
 ;;; Java
 
 (setq lsp-java-configuration-runtimes '[
-					                              (:name "JavaSE-15"
-						                                   :path "/usr/lib/jvm/java-15-openjdk-amd64/"
+					                              (:name "JavaSE-16"
+						                                   :path "/usr/lib/jvm/java-16-openjdk-amd64/"
 						                                     :default t)])
 
 (setq lsp-java-server-install-dir "/home/oogasawa/.emacs.d/lsp-java-servery")
@@ -670,7 +670,7 @@ before packages are loaded."
            ("C-x C-s" . save-buffer))
 
 
-;;;------------------------------------------------------------------
+;; ------------------------------------------------------------------
 
 (bind-key* "<f9>" 'holy-mode)
 (bind-key* "C-j" 'holy-mode)
@@ -701,3 +701,17 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yasnippet-snippets yapfify ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toml-mode toc-org tide typescript-mode flycheck tagedit sql-indent spaceline powerline smeargle slim-mode scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racer pos-tip rust-mode pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pip-requirements persp-mode pcre2el paradox spinner orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-plus-contrib org-mime org-download org-bullets open-junk-file neotree mozc move-text mmm-mode markdown-toc magit-gitflow magit-popup magit magit-section macrostep lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc indent-guide hydra lv hy-mode dash-functional hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-gtags helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haml-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit with-editor transient dash gh-md ggtags fuzzy flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu ess-smart-equals ess-R-data-view popup ctable ess engine-mode emmet-mode elisp-slime-nav dumb-jump disaster define-word cython-mode company-web web-completion-data company-statistics company-emacs-eclim eclim company-c-headers company-anaconda company column-enforce-mode coffee-mode cmake-mode clean-aindent-mode clang-format cargo bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic f s aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line avy helm-core async ac-ispell auto-complete zenburn-theme tabbar solarized-theme session pod-mode muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor apache-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
